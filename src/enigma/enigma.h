@@ -2,12 +2,6 @@
 #include "config.h"
 #include "common.h"
 
-enum
-{
-    ENIGMA_ROTOR_TYPE_PLAIN = 1, // has notch at each position
-    ENIGMA_ROTOR_TYPE_CUSTOM = 2, // custom notch configuration
-};
-
 #define ENIGMA_CHAR_COUNT 256
 
 typedef struct
@@ -16,7 +10,6 @@ typedef struct
     uint8_t rsubsts[ENIGMA_CHAR_COUNT];
     uint8_t notches[ENIGMA_CHAR_COUNT];
     uint8_t pos;
-    int type;
 } enigma_rotor_t;
 
 typedef struct
@@ -39,7 +32,7 @@ typedef struct
 
 enigma_rotor_t *enigma_rotor_alloc();
 void enigma_rotor_free(enigma_rotor_t *rotor);
-void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos, int type,
+void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos,
     const uint8_t *substs, const uint8_t *notches);
 enigma_state_t *enigma_state_init(const enigma_rotor_t *rotors,
     uint8_t r_count, const byte_pair_t *pb_pairs, uint8_t pb_count);

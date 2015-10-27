@@ -10,7 +10,7 @@ enigma_rotor_t *enigma_rotor_alloc()
 void enigma_rotor_free(enigma_rotor_t *rotor)
 { free(rotor); }
 
-void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos, int type,
+void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos,
     const uint8_t *substs, const uint8_t *notches)
 {
     // init substs/rsubsts
@@ -18,13 +18,9 @@ void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos, int type,
     for (int i = 0; i<ENIGMA_CHAR_COUNT; i++)
         rotor->rsubsts[substs[i]] = i;
     // init notches
-    if (type&ENIGMA_ROTOR_TYPE_PLAIN)
-        memset(rotor->notches, 1, sizeof(rotor->notches));
-    else
-        memcpy(rotor->notches, notches, sizeof(rotor->notches));
+    memcpy(rotor->notches, notches, sizeof(rotor->notches));
     // init other params
     rotor->pos = init_pos;
-    rotor->type = type;
 }
 
 static uint8_t enigma_rotor_ftransform(const enigma_rotor_t *rotor,

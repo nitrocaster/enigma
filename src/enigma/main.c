@@ -72,9 +72,6 @@ static void load_key_file(const char *path, enigma_rotor_cfg_t **r_cfg,
     fclose(key);
 }
 
-static int get_rtype(int index)
-{ return index ? ENIGMA_ROTOR_TYPE_CUSTOM : ENIGMA_ROTOR_TYPE_PLAIN; }
-
 int main(int argc, char *argv[])
 {
     if (argc!=4)
@@ -90,11 +87,10 @@ int main(int argc, char *argv[])
         r_substs_0, r_substs_1, r_substs_2, r_substs_refl
     };
     uint8_t *r_notches[ROTOR_COUNT] = {
-        NULL, r_notches_1, r_notches_1, r_notches_1
+        r_notches_1, r_notches_1, r_notches_1, r_notches_1
     };
     for (int i = 0; i<ROTOR_COUNT; i++)
-    enigma_rotor_init(rotor_buf+i, r_cfg->positions[i],
-        get_rtype(i), r_substs[i], r_notches[i]);
+    enigma_rotor_init(rotor_buf+i, r_cfg->positions[i], r_substs[i], r_notches[i]);
     enigma_state_t *enigma = enigma_state_init(
         rotor_buf, ROTOR_COUNT, pb_cfg->pairs, pb_cfg->count);
     FILE *src = fopen(src_path, "rb");
