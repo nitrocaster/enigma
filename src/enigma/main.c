@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     enigma_plugboard_cfg_t *pb_cfg = NULL;
     load_key_file(key_path, &r_cfg, &pb_cfg);
     uint8_t *r_substs[ROTOR_COUNT] = {
-        r_subst_0, r_subst_1, r_subst_2, r_subst_refl
+        r_substs_0, r_substs_1, r_substs_2, r_substs_refl
     };
     uint8_t *r_notches[ROTOR_COUNT] = {
         NULL, r_notches_1, r_notches_1, r_notches_1
