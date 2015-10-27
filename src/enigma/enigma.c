@@ -66,6 +66,7 @@ static void enigma_plugboard_init(enigma_plugboard_t *pb,
     {
         const byte_pair_t *pair = &pb_pairs[i];
         pb->conv[pair->first] = pair->second;
+        pb->conv[pair->second] = pair->first;
     }
 }
 
@@ -101,12 +102,14 @@ void enigma_state_transform(enigma_state_t* enigma, const void* src,
     for (size_t i = 0; i<length; i++)
     {
         uint8_t c = ((uint8_t*)src)[i];
+        c = enigma->plugboard.conv[c];
         // from first to last rotor except reflector
         for (int r = 0; r < enigma->rotor_count-1; r++)
             c = enigma_rotor_ftransform(&enigma->rotors[r], c);
         // from reflector back to first rotor
         for (int r = enigma->rotor_count-1; r>=0; r--)
             c = enigma_rotor_rtransform(&enigma->rotors[r], c);
+        c = enigma->plugboard.conv[c];
         ((uint8_t*)dst)[i] = c;
         enigma_state_rotate(enigma);
     }
