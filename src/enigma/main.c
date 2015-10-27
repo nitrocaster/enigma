@@ -42,32 +42,44 @@ static void load_key_file(const char *path, enigma_rotor_cfg_t **r_cfg,
         puts("key file not found.");
         exit(1);
     }
-    key = fopen(path, "rb");
-    uint8_t count;
-    if (fread(&count, 1, 1, key)!=1 || count!=ROTOR_COUNT)
+    key = fopen(path, "r");
+    uint32_t count;
+    if (fscanf(key, "%u:", &count)!=1 || count!=ROTOR_COUNT)
     {
         puts(MSG_INVALID_KEY_FILE);
         exit(1);
     }
     *r_cfg = malloc(sizeof(enigma_rotor_cfg_t)+count);
     (*r_cfg)->count = count;
-    if (fread((*r_cfg)->positions, 1, count, key)!=count)
+    for (uint32_t i = 0; i<count; i++)
     {
-        puts(MSG_INVALID_KEY_FILE);
-        exit(1);
+        uint32_t pos = 0;
+        if (fscanf(key, "%u", &pos)!=1 || pos>255)
+        {
+            puts(MSG_INVALID_KEY_FILE);
+            exit(1);
+        }
+        (*r_cfg)->positions[i] = (uint8_t)pos;
+        fscanf(key, ",");
     }
-    if (fread(&count, 1, 1, key)!=1)
+    if (fscanf(key, "%u:", &count)!=1)
     {
         puts(MSG_INVALID_KEY_FILE);
         exit(1);
     }
     *pb_cfg = malloc(sizeof(enigma_plugboard_cfg_t)+count);
     (*pb_cfg)->count = count;
-    if (count &&
-        fread((*pb_cfg)->pairs, sizeof(byte_pair_t), count, key)!=count)
+    for (uint32_t i = 0; i<count; i++)
     {
-        puts(MSG_INVALID_KEY_FILE);
-        exit(1);
+        uint32_t a = 0, b = 0;
+        if (fscanf(key, "%u=%u", &a, &b)!=2 || a>255 || b>255)
+        {
+            puts(MSG_INVALID_KEY_FILE);
+            exit(1);
+        }
+        (*pb_cfg)->pairs[i].first = (uint8_t)a;
+        (*pb_cfg)->pairs[i].second = (uint8_t)b;
+        fscanf(key, ",");
     }
     fclose(key);
 }
