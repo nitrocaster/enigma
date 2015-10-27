@@ -13,7 +13,10 @@ void enigma_rotor_free(enigma_rotor_t *rotor)
 void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos, int type,
     const uint8_t *substs, const uint8_t *notches)
 {
+    // init substs/rsubsts
     memcpy(rotor->substs, substs, sizeof(rotor->substs));
+    for (int i = 0; i<ENIGMA_CHAR_COUNT; i++)
+        rotor->rsubsts[substs[i]] = i;
     // init notches
     if (type&ENIGMA_ROTOR_TYPE_PLAIN)
         memset(rotor->notches, 1, sizeof(rotor->notches));
@@ -24,11 +27,18 @@ void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos, int type,
     rotor->type = type;
 }
 
-static uint8_t enigma_rotor_transform(const enigma_rotor_t *rotor,
+static uint8_t enigma_rotor_ftransform(const enigma_rotor_t *rotor,
     uint8_t input)
 {
     uint8_t rpos = rotor->pos;
-    return rotor->substs[input-rpos]+rpos;
+    return rotor->substs[(uint8_t)(input-rpos)]+rpos;
+}
+
+static uint8_t enigma_rotor_rtransform(const enigma_rotor_t *rotor,
+    uint8_t input)
+{
+    uint8_t rpos = rotor->pos;
+    return rotor->rsubsts[(uint8_t)(input-rpos)]+rpos;
 }
 
 static int enigma_rotor_has_notch(const enigma_rotor_t *rotor)
@@ -97,10 +107,10 @@ void enigma_state_transform(enigma_state_t* enigma, const void* src,
         uint8_t c = ((uint8_t*)src)[i];
         // from first to last rotor except reflector
         for (int r = 0; r < enigma->rotor_count-1; r++)
-            c = enigma_rotor_transform(&enigma->rotors[r], c);
+            c = enigma_rotor_ftransform(&enigma->rotors[r], c);
         // from reflector back to first rotor
         for (int r = enigma->rotor_count-1; r>=0; r--)
-            c = enigma_rotor_transform(&enigma->rotors[r], c);
+            c = enigma_rotor_rtransform(&enigma->rotors[r], c);
         ((uint8_t*)dst)[i] = c;
         enigma_state_rotate(enigma);
     }

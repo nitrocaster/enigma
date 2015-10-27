@@ -13,6 +13,7 @@ enum
 typedef struct
 {
     uint8_t substs[ENIGMA_CHAR_COUNT];
+    uint8_t rsubsts[ENIGMA_CHAR_COUNT];
     uint8_t notches[ENIGMA_CHAR_COUNT];
     uint8_t pos;
     int type;
