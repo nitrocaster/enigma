@@ -41,7 +41,7 @@ static void enigma_state_rotate(enigma_state_t *enigma)
 {
     uint8_t rcount = enigma->rotor_count;
     uint8_t *r = alloca(rcount);
-    r[0] = TRUE;
+    r[0] = 1;
     for (int i = 1; i<rcount; i++)
         r[i] = enigma_rotor_has_notch(&enigma->rotors[i-1]);
     for (int i = 0; i < rcount; i++)
