@@ -30,8 +30,6 @@ typedef struct
     enigma_rotor_t rotors[]; // last rotor is reflector
 } enigma_state_t;
 
-enigma_rotor_t *enigma_rotor_alloc();
-void enigma_rotor_free(enigma_rotor_t *rotor);
 void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos,
     const uint8_t *substs, const uint8_t *notches);
 enigma_state_t *enigma_state_init(const enigma_rotor_t *rotors,

@@ -4,12 +4,6 @@
 #include <memory.h>
 #include <malloc.h>
 
-enigma_rotor_t *enigma_rotor_alloc()
-{ return malloc(sizeof(enigma_rotor_t)); }
-
-void enigma_rotor_free(enigma_rotor_t *rotor)
-{ free(rotor); }
-
 void enigma_rotor_init(enigma_rotor_t *rotor, uint8_t init_pos,
     const uint8_t *substs, const uint8_t *notches)
 {
